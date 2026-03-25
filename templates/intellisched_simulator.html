@@ -479,6 +479,90 @@ header{
 .st-ready{background:rgba(255,201,74,.15);color:var(--y);border:1px solid rgba(255,201,74,.3);padding:4px 8px;border-radius:4px;}
 .st-run{background:rgba(91,140,255,.15);color:var(--b);border:1px solid rgba(91,140,255,.3);padding:4px 8px;border-radius:4px;}
 .st-done{background:rgba(15,239,180,.15);color:var(--g);border:1px solid rgba(15,239,180,.3);padding:4px 8px;border-radius:4px;}
+
+/* ── LIVE SIMULATION (Progress Bar Tab) ──── */
+.sim-topbar{display:flex;align-items:center;gap:14px;padding:16px;background:var(--panel);border:1px solid var(--border);border-radius:12px;margin-bottom:18px;flex-wrap:wrap;}
+.sim-btn{padding:8px 16px;background:var(--border);border:1px solid var(--border2);border-radius:8px;color:var(--mute);font-family:'JetBrains Mono',monospace;font-size:.75rem;cursor:pointer;transition:all .2s;}
+.sim-btn:hover{border-color:var(--b);color:var(--text);}
+.sim-btn.play-active{background:linear-gradient(135deg,var(--g),#00c896);border:none;color:#03100a;font-weight:700;box-shadow:0 4px 16px rgba(15,239,180,.3);}
+.sim-btn.play-active:hover{box-shadow:0 6px 24px rgba(15,239,180,.5);}
+.sim-btn.step-btn{border-color:var(--b);color:var(--b);}
+.sim-btn.step-btn:hover{background:rgba(91,140,255,.12);}
+.sim-btn.reset-btn:hover{border-color:var(--r);color:var(--r);}
+
+.sim-clock{display:flex;align-items:center;gap:12px;margin-left:auto;background:var(--border);padding:10px 16px;border-radius:8px;}
+.sim-clock-lbl{font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--mute);}
+.sim-clock-val{font-size:1.3rem;font-weight:700;color:var(--bright);font-family:'JetBrains Mono',monospace;min-width:56px;}
+.sim-clock-unit{font-size:.65rem;color:var(--mute);}
+
+.sim-speed-row{display:flex;align-items:center;gap:12px;background:var(--border);padding:10px 16px;border-radius:8px;margin-left:auto;}
+.sim-speed-lbl{font-size:.7rem;color:var(--mute);}
+.sim-speed-slider{width:120px;cursor:pointer;}
+.sim-speed-val{font-size:.75rem;color:var(--b);font-weight:600;min-width:32px;text-align:right;}
+.sim-progress-legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;}
+.sim-legend-item{display:flex;align-items:center;gap:6px;font-size:.65rem;color:var(--mute);}
+
+/* Process lanes */
+.sim-lanes-wrap{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:18px;}
+.sim-lanes-head{font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--mute);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.sim-lanes-head::after{content:'';flex:1;height:1px;background:var(--border);}
+.sim-lanes-head .running-tag{background:rgba(15,239,180,.15);color:var(--g);padding:2px 8px;border-radius:4px;font-size:.58rem;}
+
+.sim-lane{display:flex;align-items:center;gap:10px;padding:12px;background:rgba(255,255,255,.02);border-radius:8px;border:1px solid transparent;margin-bottom:8px;transition:all .2s;}
+.sim-lane.lane-running{border-color:var(--g);background:rgba(15,239,180,.05);}
+.sim-lane.lane-done{opacity:.6;border-color:var(--border);}
+.sim-lane.lane-waiting{opacity:.55;}
+.sim-lane.lane-notyet{opacity:.35;}
+
+.sim-lane-avatar{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:white;flex-shrink:0;}
+.sim-lane.lane-running .sim-lane-avatar{box-shadow:0 0 12px rgba(15,239,180,.4);animation:pulse-avatar .8s ease infinite;}
+@keyframes pulse-avatar{0%,100%{box-shadow:0 0 12px rgba(15,239,180,.4);}50%{box-shadow:0 0 22px rgba(15,239,180,.7);}}
+
+.sim-lane-info{width:90px;flex-shrink:0;}
+.sim-lane-name{font-size:.8rem;font-weight:700;color:var(--bright);}
+.sim-lane-meta{font-size:.58rem;color:var(--mute);margin-top:2px;line-height:1.5;}
+
+.sim-bar-wrap{flex:1;position:relative;}
+.sim-bar-track{height:20px;background:var(--border);border-radius:4px;position:relative;overflow:hidden;}
+.sim-bar-fill{height:100%;background:linear-gradient(90deg,var(--b),#7a9cff);border-radius:4px;display:flex;align-items:center;padding:0 8px;position:relative;transition:width .3s ease;}
+.sim-bar-fill::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);animation:shimmer 1.5s infinite;}
+@keyframes shimmer{0%{left:-100%;}100%{left:200%;}}
+.sim-bar-pct-inside{font-size:.68rem;font-weight:700;color:rgba(0,0,0,.6);white-space:nowrap;}
+.sim-bar-pct-outside{font-size:.65rem;color:var(--mute);margin-left:8px;font-weight:600;}
+.sim-bar-segments{display:flex;height:100%;border-radius:4px;overflow:hidden;}
+.sim-bar-seg{border-radius:2px;transition:opacity .2s;}
+
+.sim-status-badge{padding:4px 10px;border-radius:6px;font-size:.65rem;font-weight:600;border:1px solid;}
+.badge-notyet{background:rgba(58,66,104,.3);color:var(--dim);border:1px solid var(--border2);}
+.badge-waiting{background:rgba(255,201,74,.12);color:var(--y);border:1px solid rgba(255,201,74,.3);}
+.badge-running{background:rgba(15,239,180,.15);color:var(--g);border:1px solid rgba(15,239,180,.4);}
+.badge-done{background:rgba(91,140,255,.12);color:var(--b);border:1px solid rgba(91,140,255,.3);}
+
+/* CPU Timeline strip */
+.sim-timeline-wrap{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:18px;}
+.sim-timeline-strip{height:28px;background:var(--border);border-radius:8px;position:relative;overflow:hidden;margin-bottom:6px;}
+.sim-timeline-seg{height:100%;display:inline-block;position:relative;border-radius:2px;border-right:1px solid var(--ink);}
+.sim-timeline-seg:last-child{border-right:none;}
+.sim-timeline-seg.seg-future{opacity:.25;}
+.sim-timeline-seg.seg-idle{background:var(--dim);opacity:.3;}
+.sim-timeline-cursor{position:absolute;top:0;bottom:0;width:2px;background:var(--c);z-index:10;}
+.sim-cursor-line{position:absolute;top:-4px;left:50%;transform:translateX(-50%);font-size:.5rem;color:var(--c);font-weight:700;}
+.sim-tick-row{display:flex;padding:0;height:16px;position:relative;}
+.sim-tick{flex:1;border-left:1px solid var(--border);display:flex;align-items:flex-end;justify-content:flex-start;padding-left:2px;font-size:.5rem;color:var(--mute);}
+
+/* Sim live metrics */
+.sim-metrics-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:0;}
+.sim-metric{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px;position:relative;}
+.sim-metric::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.sm-g::before{background:linear-gradient(90deg,var(--g),transparent);}
+.sm-b::before{background:linear-gradient(90deg,var(--b),transparent);}
+.sm-p::before{background:linear-gradient(90deg,var(--p),transparent);}
+.sm-y::before{background:linear-gradient(90deg,var(--y),transparent);}
+.sm-r::before{background:linear-gradient(90deg,var(--r),transparent);}
+.sim-metric-lbl{font-size:.56rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--mute);margin-bottom:6px;}
+.sim-metric-val{font-size:1.6rem;font-weight:700;line-height:1;color:var(--bright);}
+.sim-metric-unit{font-size:.62rem;color:var(--mute);margin-left:3px;font-weight:400;}
+.sim-metric-sub{font-size:.6rem;color:var(--dim);margin-top:4px;}
 </style>
 </head>
 <body>
@@ -490,7 +574,7 @@ header{
   <div class="brand">
     <div class="brand-badge">⚙</div>
     <div>
-      <div class="brand-name">IntelliSched</div>
+      <div class="brand-name">Intelligent CPU Scheduler Simulator</div>
       <div class="brand-sub">CSE250 · CA2 · Intelligent CPU Scheduler Simulator</div>
     </div>
   </div>
@@ -593,7 +677,7 @@ header{
 <div class="main">
   <div class="tabs">
     <div class="tab on"  onclick="switchTab('gantt',this)"><span class="tab-icon">📊</span>Gantt Chart</div>
-    <div class="tab"     onclick="switchTab('progress',this)"><span class="tab-icon">⏳</span>Progress</div>
+    <div class="tab"     onclick="switchTab('progress',this)"><span class="tab-icon">▶️</span>Live Simulation</div>
     <div class="tab"     onclick="switchTab('metrics',this)"><span class="tab-icon">📈</span>Metrics</div>
     <div class="tab"     onclick="switchTab('table',this)"><span class="tab-icon">📋</span>Process Table</div>
     <div class="tab"     onclick="switchTab('ai',this)"><span class="tab-icon">🤖</span>AI Insights</div>
@@ -610,43 +694,50 @@ header{
 
   <!-- PROGRESS —— LIVE PLAYBACK -->
   <div class="pane" id="pane-progress">
-    <!-- Playback Controls -->
-    <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-      <button id="play-btn" style="padding:8px 16px;background:linear-gradient(135deg,var(--g),#00c896);border:none;border-radius:8px;color:#03100a;font-weight:700;cursor:pointer;transition:all .2s;" onclick="togglePlayback()">▶ Play</button>
-      <button style="padding:8px 14px;background:var(--border);border:1px solid var(--border2);border-radius:8px;color:var(--mute);cursor:pointer;transition:all .2s;" onclick="stepForward()">Step ›</button>
-      <button style="padding:8px 14px;background:var(--border);border:1px solid var(--border2);border-radius:8px;color:var(--mute);cursor:pointer;transition:all .2s;" onclick="resetPlayback()">↺ Reset</button>
-      <div style="display:flex;align-items:center;gap:10px;margin-left:auto;">
-        <label style="font-size:.75rem;color:var(--mute);">Speed:</label>
-        <input type="range" id="speed-slider" min="1" max="10" value="5" step="1" style="width:120px;cursor:pointer;" oninput="updateSpeed()" />
-        <span id="speed-display" style="font-size:.75rem;color:var(--mute);min-width:28px;">5×</span>
+    <!-- Playback Control Bar -->
+    <div class="sim-topbar">
+      <button class="sim-btn play-active" id="sim-play-btn" onclick="simTogglePlay()">▶ Play</button>
+      <button class="sim-btn step-btn" onclick="simStepFwd()">▶ Step</button>
+      <button class="sim-btn reset-btn" onclick="simReset()">↺ Reset</button>
+      
+      <div class="sim-clock">
+        <span class="sim-clock-lbl">Simulation Time</span>
+        <span class="sim-clock-val" id="sim-clock">0</span>
+        <span class="sim-clock-unit">ms</span>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;margin-left:auto;background:var(--border);padding:8px 14px;border-radius:8px;">
-        <span style="font-size:.7rem;color:var(--mute);">Time:</span>
-        <span id="time-display" style="font-size:1.1rem;font-weight:700;min-width:48px;">0</span>
-        <span style="font-size:.7rem;color:var(--mute);">ms</span>
+      
+      <div class="sim-speed-row">
+        <span class="sim-speed-lbl">Speed:</span>
+        <input type="range" class="sim-speed-slider" id="sim-speed" min="10" max="200" value="80" step="10" oninput="simSetSpeed(this.value)"/>
+        <span class="sim-speed-val" id="sim-speed-display">1.0×</span>
       </div>
     </div>
 
-    <!-- Process Lanes -->
-    <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:18px;">
-      <div style="font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--mute);margin-bottom:16px;display:flex;align-items:center;gap:10px;">
-        <span>Process Lanes</span>
-        <div style="flex:1;height:1px;background:var(--border);"></div>
+    <!-- Process Execution Lanes -->
+    <div class="sim-lanes-wrap">
+      <div class="sim-lanes-head">
+        <span>Process Execution Lanes</span>
+        <span class="running-tag" id="running-indicator">Waiting</span>
       </div>
-      <div id="lanes-container" style="display:flex;flex-direction:column;gap:12px;"></div>
+      <div id="sim-lanes-container"></div>
     </div>
 
     <!-- CPU Timeline -->
-    <div style="background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:18px;">
-      <div style="font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--mute);margin-bottom:10px;display:flex;align-items:center;gap:10px;">
+    <div class="sim-timeline-wrap">
+      <div class="sim-lanes-head">
         <span>CPU Timeline</span>
-        <div style="flex:1;height:1px;background:var(--border);"></div>
       </div>
-      <div id="cpu-timeline" style="height:24px;border-radius:8px;border:1px solid var(--border);overflow:hidden;display:flex;background:var(--ink2);"></div>
+      <div class="sim-timeline-strip" id="sim-timeline-strip"></div>
+      <div class="sim-tick-row" id="sim-ticks"></div>
     </div>
 
-    <!-- Metrics Summary -->
-    <div id="playback-metrics" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:18px;"></div>
+    <!-- Live Metrics -->
+    <div style="margin-top:18px;">
+      <div class="sim-lanes-head">
+        <span>Live Performance Metrics</span>
+      </div>
+      <div class="sim-metrics-row" id="sim-metrics-container"></div>
+    </div>
   </div>
 
   <!-- METRICS -->
@@ -1005,22 +1096,31 @@ function run() {
   maxPlaybackTime = ganttLog.reduce((m,e)=>Math.max(m,e.end), 0);
   playbackTime = 0;
   renderAll(result, procs, algo, q);
-  renderPlaybackLanes(procs, 0);
-  renderCPUTimeline(ganttLog, 0, maxPlaybackTime);
-  updatePlaybackMetrics({}, procs, 0);
+  // Old playback functions - commented out since we use new simulation engine
+  // renderPlaybackLanes(procs, 0);
+  // renderCPUTimeline(ganttLog, 0, maxPlaybackTime);
+  // updatePlaybackMetrics({}, procs, 0);
 }
 function resetAll(){ pidCnt=1; procs=[]; loadPreset('basic'); clearOutputs(); resetPlayback(); }
 function resetPlayback(){
   isPlaying=false;
   playbackTime=0;
   clearInterval(playbackTimer);
-  if(document.getElementById('play-btn')){ document.getElementById('play-btn').textContent='▶ Play'; }
-  if(document.getElementById('time-display')){ document.getElementById('time-display').textContent='0'; }
-  renderPlaybackLanes(procs, 0);
-  renderCPUTimeline(ganttLog, 0, maxPlaybackTime);
-  updatePlaybackMetrics({}, procs, 0);
-  // Show initial prompt
-  document.getElementById('playback-metrics').innerHTML = `<div style="grid-column:1/-1;padding:16px;background:rgba(15,239,180,.08);border:1px solid rgba(15,239,180,.2);border-radius:10px;text-align:center;color:var(--mute);">⏳ Click <strong style="color:var(--text);">RUN SIMULATION</strong> to watch process scheduling in real-time</div>`;
+  
+  // Reset simulation engine
+  simT=0;
+  simPlaying=false;
+  clearInterval(simTimer);
+  if(document.getElementById('sim-play-btn')){ 
+    document.getElementById('sim-play-btn').textContent='▶ Play';
+    document.getElementById('sim-play-btn').classList.remove('play-active');
+  }
+  
+  // Show initial prompt in metrics if simulation pane is visible
+  const metricsContainer = document.getElementById('sim-metrics-container');
+  if(metricsContainer){
+    metricsContainer.innerHTML = `<div style="grid-column:1/-1;padding:16px;background:rgba(15,239,180,.08);border:1px solid rgba(15,239,180,.2);border-radius:10px;text-align:center;color:var(--mute);">▶ Click <strong style="color:var(--text);">RUN SIMULATION</strong> to start the live scheduler simulation</div>`;
+  }
 }
 function clearOutputs(){
   ['gantt','progress','metrics','table','ai','compare'].forEach(id=>{
@@ -1476,6 +1576,206 @@ function renderCompare(ps, q) {
   h+=`</div>`;
   document.getElementById('compare-out').innerHTML = h;
 }
+
+// ══════════════════════════════════════════
+//  ENHANCED LIVE SIMULATION ENGINE
+// ══════════════════════════════════════════
+let simGantt = [], simRes = {}, simMaxT = 0, simT = 0;
+let simTimer = null, simPlaying = false, simSpeedMs = 80;
+
+function simCI(pid){ return procs.findIndex(p=>p.id===pid) % 7; }
+
+function simBuildFromLastRun(){
+  if(ganttLog.length===0) return;
+  simGantt = ganttLog;
+  simMaxT = ganttLog.reduce((m,e)=>Math.max(m,e.end), 0);
+  simT = 0;
+}
+
+function simBuildTimeline(){
+  const container = document.getElementById('sim-timeline-strip');
+  if(!simGantt.length) return;
+  let html='';
+  simGantt.forEach((e,i)=>{
+    const pct = ((e.end-e.start)/simMaxT*100).toFixed(2);
+    const color = e.id===-1 ? 'var(--dim)' : COLORS[simCI(e.id)];
+    const cls = simT >= e.end ? '' : simT >= e.start ? 'seg-running' : 'seg-future';
+    if(e.id===-1) html+=`<div class="sim-timeline-seg seg-idle" style="width:${pct}%;"></div>`;
+    else html+=`<div class="sim-timeline-seg ${cls}" style="width:${pct}%;background:${color};"></div>`;
+  });
+  container.innerHTML = html;
+  
+  // Update ticks
+  const tickContainer = document.getElementById('sim-ticks');
+  let ticks='';
+  for(let i=0; i<=simMaxT; i+=Math.ceil(simMaxT/10)){
+    ticks+=`<div class="sim-tick">${i}</div>`;
+  }
+  tickContainer.innerHTML = ticks;
+}
+
+function simRenderFrame(t){
+  // Safety check
+  if(!simGantt || simGantt.length===0){
+    document.getElementById('sim-lanes-container').innerHTML = '<div style="padding:24px;text-align:center;color:var(--mute);">Run a simulation first</div>';
+    return;
+  }
+  
+  // Update clock
+  document.getElementById('sim-clock').textContent = t;
+  
+  // Update lanes
+  const lanesContainer = document.getElementById('sim-lanes-container');
+  let lanesHtml='';
+  
+  procs.forEach(p=>{
+    const events = simGantt.filter(e=>e.id===p.id);
+    let progress=0, status='not-yet', isRunning=false;
+    for(const e of events){
+      if(e.end<=t) progress += (e.end-e.start);
+      if(e.start<=t && t<e.end){
+        isRunning=true;
+        status='running';
+        progress += (t-e.start);
+      }
+    }
+    
+    if(p.at>t) status='not-yet';
+    else if(events.length>0 && events.slice(-1)[0].end<=t) status='done';
+    else if(isRunning) status='running';
+    else if(p.at<=t && progress<p.bt) status='waiting';
+    
+    const pct = (progress/p.bt*100).toFixed(1);
+    const color = COLORS[simCI(p.id)];
+    
+    lanesHtml+=`<div class="sim-lane lane-${status}">
+      <div class="sim-lane-avatar" style="background:${color};color:white;">P${p.id}</div>
+      <div class="sim-lane-info">
+        <div class="sim-lane-name">P${p.id}</div>
+        <div class="sim-lane-meta">AT:${p.at}ms<br>BT:${p.bt}ms</div>
+      </div>
+      <div class="sim-bar-wrap">
+        <div class="sim-bar-track">
+          <div class="sim-bar-fill" style="width:${pct}%;background:${color};">
+            <span class="sim-bar-pct-inside">${pct}%</span>
+          </div>
+        </div>
+      </div>
+      <div class="sim-status-badge badge-${status}">${status.toUpperCase()}</div>
+    </div>`;
+  });
+  
+  lanesContainer.innerHTML = lanesHtml || '<div style="padding:24px;text-align:center;color:var(--mute);">No processes</div>';
+  
+  // Update timeline
+  simBuildTimeline();
+  
+  // Update metrics
+  let completed=0, totalWT=0, totalTAT=0;
+  procs.forEach(p=>{
+    const lastEvent = simGantt.filter(e=>e.id===p.id).slice(-1)[0];
+    if(lastEvent && lastEvent.end<=t){
+      completed++;
+      const wt = lastEvent.start - p.at;
+      const tat = lastEvent.end - p.at;
+      totalWT += wt;
+      totalTAT += tat;
+    }
+  });
+  
+  const totalExecTime = simGantt.filter(e=>e.id!==-1).reduce((s,e)=>s+(e.end-e.start),0);
+  const cpuUtil = t>0 ? (totalExecTime/t*100).toFixed(1) : '0';
+  
+  const metricsHtml = `
+    <div class="sim-metric sm-g">
+      <div class="sim-metric-lbl">Completed</div>
+      <div class="sim-metric-val">${completed}<span class="sim-metric-unit">/ ${procs.length}</span></div>
+    </div>
+    <div class="sim-metric sm-b">
+      <div class="sim-metric-lbl">Avg Waiting Time</div>
+      <div class="sim-metric-val">${completed>0 ? (totalWT/completed).toFixed(1) : '—'}<span class="sim-metric-unit">ms</span></div>
+    </div>
+    <div class="sim-metric sm-p">
+      <div class="sim-metric-lbl">Avg Turnaround</div>
+      <div class="sim-metric-val">${completed>0 ? (totalTAT/completed).toFixed(1) : '—'}<span class="sim-metric-unit">ms</span></div>
+    </div>
+    <div class="sim-metric sm-y">
+      <div class="sim-metric-lbl">CPU Utilization</div>
+      <div class="sim-metric-val">${cpuUtil}<span class="sim-metric-unit">%</span></div>
+    </div>
+  `;
+  document.getElementById('sim-metrics-container').innerHTML = metricsHtml;
+  
+  // Update running indicator
+  const running = procs.some(p=>simGantt.filter(e=>e.id===p.id).some(e=>e.start<=t && t<e.end));
+  document.getElementById('running-indicator').textContent = running ? '🟢 RUNNING' : completed===procs.length ? '✓ COMPLETE' : '⏸ WAITING';
+}
+
+function simReset(){
+  simT=0;
+  simPlaying=false;
+  clearInterval(simTimer);
+  document.getElementById('sim-play-btn').textContent='▶ Play';
+  document.getElementById('sim-play-btn').classList.remove('play-active');
+  simRenderFrame(0);
+}
+
+function simTogglePlay(){
+  if(simMaxT===0){
+    alert('⚠️ Run a simulation first!');
+    return;
+  }
+  simPlaying=!simPlaying;
+  const btn = document.getElementById('sim-play-btn');
+  if(simPlaying){
+    btn.textContent='⏸ Pause';
+    btn.classList.add('play-active');
+    simTimer = setInterval(()=>{
+      simT++;
+      if(simT>=simMaxT){
+        simT=simMaxT;
+        simPlaying=false;
+        btn.textContent='▶ Play';
+        btn.classList.remove('play-active');
+        clearInterval(simTimer);
+      }
+      simRenderFrame(simT);
+    }, simSpeedMs);
+  } else {
+    btn.textContent='▶ Play';
+    btn.classList.remove('play-active');
+    clearInterval(simTimer);
+  }
+}
+
+function simStepFwd(){
+  if(simMaxT===0) return;
+  clearInterval(simTimer);
+  simPlaying=false;
+  document.getElementById('sim-play-btn').textContent='▶ Play';
+  if(simT<simMaxT) simT++;
+  simRenderFrame(simT);
+}
+
+function simSetSpeed(v){
+  // Calculate interval delay: lower delay = faster simulation
+  // v ranges from 10 to 200, we want to map this to 150ms down to 10ms
+  simSpeedMs = Math.max(10, Math.round(160 - (v-10)*0.75));
+  const speedVal = (150/simSpeedMs).toFixed(1);
+  document.getElementById('sim-speed-display').textContent = speedVal + '×';
+  if(simPlaying){
+    clearInterval(simTimer);
+    simTogglePlay();
+  }
+}
+
+// Hook into run() to initialize live simulation
+const _origRun = run;
+run = function(){
+  _origRun();
+  simBuildFromLastRun();
+  simReset();
+};
 </script>
 </body>
 </html>
