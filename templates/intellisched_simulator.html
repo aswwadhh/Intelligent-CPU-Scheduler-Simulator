@@ -166,6 +166,26 @@ header{
 }
 .add-btn:hover{background:rgba(91,140,255,.15);border-style:solid;}
 
+/* Priority Toggle Button */
+#priority-toggle-btn{
+  transition:all .2s;
+}
+#priority-toggle-btn:hover:not(:disabled){
+  border-color:var(--g);
+  color:var(--g);
+  background:rgba(15,239,180,.08);
+}
+#priority-toggle-btn.active{
+  border-color:var(--g);
+  background:rgba(15,239,180,.12);
+  color:var(--g);
+  box-shadow:0 0 12px rgba(15,239,180,.2);
+}
+#priority-toggle-btn:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+
 .run-btn{
   width:100%;padding:13px;
   background:linear-gradient(135deg,var(--g) 0%,#00c896 100%);
@@ -615,7 +635,10 @@ header{
 
   <!-- Process Manager — MODULE 2 -->
   <div class="sb-sec">
-    <div class="sec-head">Module 2 · Process Manager</div>
+    <div class="sec-head" style="margin-bottom:8px;">Module 2 · Process Manager</div>
+    <div style="display:flex;gap:6px;margin-bottom:10px;align-items:center;">
+      <button id="priority-toggle-btn" style="flex:1;padding:6px 8px;background:var(--border);border:1px solid var(--border2);border-radius:6px;color:var(--mute);font-family:'JetBrains Mono',monospace;font-size:.65rem;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.5px;font-weight:600;" onclick="togglePriority()" title="Toggle priority column visibility">▼ Priority</button>
+    </div>
     <table class="ptbl">
       <thead>
         <tr>
@@ -978,6 +1001,7 @@ let algo = 'fcfs';
 let pidCnt = 1;
 let procs = [];
 let ganttLog = [];
+let showPriority = false;
 let playbackTime = 0;
 let isPlaying = false;
 let playbackSpeed = 5;
@@ -1005,6 +1029,19 @@ function setAlgo(a) {
   document.getElementById('ab-'+a).classList.add('on');
   document.getElementById('algo-desc').textContent = DESCS[a];
   document.getElementById('cfg-sec').style.display = (a==='rr'||a==='mlfq') ? 'block' : 'none';
+  
+  // Auto-enable priority for priority-based algorithms
+  const priorityAlgos = ['priority', 'pp', 'mlfq'];
+  if(priorityAlgos.includes(a)){
+    showPriority = true;
+    document.getElementById('priority-toggle-btn').classList.add('active');
+    document.getElementById('priority-toggle-btn').disabled = true;
+    document.getElementById('priority-toggle-btn').title = 'Priority required for this algorithm';
+  } else {
+    document.getElementById('priority-toggle-btn').disabled = false;
+    document.getElementById('priority-toggle-btn').title = 'Toggle priority column visibility';
+  }
+  renderTable();
 }
 
 // ══════════════════════════════════════════
@@ -1038,14 +1075,31 @@ function renderTable() {
   procs.forEach((p,i) => {
     const ci = i % 7;
     const tr = document.createElement('tr');
+    const priorityCol = showPriority ? `<td><input type="number" value="${p.pr}" min="1" max="10" onchange="updateProc(${p.id},'pr',this.value)"/></td>` : '';
     tr.innerHTML = `
       <td><span class="pid pc${ci}">P${p.id}</span></td>
       <td><input type="number" value="${p.at}" min="0" max="99" onchange="updateProc(${p.id},'at',this.value)"/></td>
       <td><input type="number" value="${p.bt}" min="1" max="50" onchange="updateProc(${p.id},'bt',this.value)"/></td>
-      <td><input type="number" value="${p.pr}" min="1" max="10" onchange="updateProc(${p.id},'pr',this.value)"/></td>
+      ${priorityCol}
       <td><button class="xbtn" onclick="removeProc(${p.id})">✕</button></td>`;
     tb.appendChild(tr);
   });
+  
+  // Update table header
+  const thead = document.querySelector('.ptbl thead tr');
+  if(showPriority && !thead.textContent.includes('PR')){
+    thead.innerHTML = `<th>PID</th><th>AT</th><th>BT</th><th>PR</th><th></th>`;
+  } else if(!showPriority && thead.textContent.includes('PR')){
+    thead.innerHTML = `<th>PID</th><th>AT</th><th>BT</th><th></th>`;
+  }
+}
+
+function togglePriority(){
+  const priorityAlgos = ['priority', 'pp', 'mlfq'];
+  if(priorityAlgos.includes(algo)) return; // Disabled for priority algorithms
+  showPriority = !showPriority;
+  document.getElementById('priority-toggle-btn').classList.toggle('active');
+  renderTable();
 }
 
 // ══════════════════════════════════════════
